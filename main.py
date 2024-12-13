@@ -18,7 +18,7 @@ openai.api_key = OPENAI_API_KEY
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello World from FastAPI with Google CSE and OpenAI!"}
+    return {"message": "Hello World from FastAPI on Render with Google CSE and OpenAI!"}
 
 @app.get("/search")
 def perform_search(query: str):
@@ -58,32 +58,6 @@ def scrape_article(url: str) -> str:
     text = " ".join(p.get_text() for p in paragraphs if p.get_text().strip())
     return text
 
-@app.get("/first_result_url")
-def get_first_result_url(query: str):
-    """
-    Ritorna l'URL del primo risultato della ricerca.
-    Utile per testare se la ricerca funziona e se estrai correttamente il primo link.
-    """
-    search_results = perform_search(query=query)
-    items = search_results.get("items", [])
-    if not items:
-        raise HTTPException(status_code=404, detail="Nessun risultato trovato per la query.")
-    first_url = items[0].get("link")
-    if not first_url:
-        raise HTTPException(status_code=404, detail="Nessun URL valido trovato nel primo risultato.")
-    return {"first_url": first_url}
-
-@app.get("/scrape")
-def scrape_endpoint(url: str):
-    """
-    Endpoint per testare lo scraping.
-    Passa un URL e verrà restituito il testo estratto.
-    """
-    text = scrape_article(url)
-    if not text:
-        raise HTTPException(status_code=500, detail="Non è stato possibile estrarre il contenuto dal sito.")
-    return {"url": url, "scraped_text": text[:500] + "..."}  # Limito a 500 caratteri per brevità
-
 @app.post("/generate_article")
 def generate_article(query: str):
     """
@@ -121,24 +95,3 @@ def generate_article(query: str):
         raise HTTPException(status_code=500, detail=f"Errore nella generazione dell'articolo: {e}")
 
     return {"url_utilizzata": first_url, "articolo_generato": generated_article}
-
-@app.get("/test_openai")
-def test_openai():
-    """
-    Test semplice per verificare la connessione con OpenAI.
-    Invia un semplice prompt e riceve una risposta.
-    """
-    prompt = "Dimmi qualcosa di interessante sull'Italia."
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Sei un assistente informativo."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        answer = response.choices[0].message.content
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Errore nella richiesta a OpenAI: {e}")
-
-    return {"prompt": prompt, "response": answer}
