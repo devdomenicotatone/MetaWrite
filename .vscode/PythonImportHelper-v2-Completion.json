@@ -55,7 +55,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    Parametro: query (string)\n    Ritorna: risultati della ricerca in JSON\n    \"\"\"\n    url = \"https://www.googleapis.com/customsearch/v1\"",
+        "peekOfCode": "def read_root():\n    return {\"message\": \"Hello World from FastAPI with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    Parametro: query (string)\n    Ritorna: risultati della ricerca in JSON\n    \"\"\"\n    url = \"https://www.googleapis.com/customsearch/v1\"",
         "detail": "main",
         "documentation": {}
     },
@@ -78,11 +78,38 @@
         "documentation": {}
     },
     {
+        "label": "get_first_result_url",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_first_result_url(query: str):\n    \"\"\"\n    Ritorna l'URL del primo risultato della ricerca.\n    Utile per testare se la ricerca funziona e se estrai correttamente il primo link.\n    \"\"\"\n    search_results = perform_search(query=query)\n    items = search_results.get(\"items\", [])\n    if not items:\n        raise HTTPException(status_code=404, detail=\"Nessun risultato trovato per la query.\")\n    first_url = items[0].get(\"link\")",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "scrape_endpoint",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def scrape_endpoint(url: str):\n    \"\"\"\n    Endpoint per testare lo scraping.\n    Passa un URL e verrà restituito il testo estratto.\n    \"\"\"\n    text = scrape_article(url)\n    if not text:\n        raise HTTPException(status_code=500, detail=\"Non è stato possibile estrarre il contenuto dal sito.\")\n    return {\"url\": url, \"scraped_text\": text[:500] + \"...\"}  # Limito a 500 caratteri per brevità\n@app.post(\"/generate_article\")",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
         "label": "generate_article",
         "kind": 2,
         "importPath": "main",
         "description": "main",
         "peekOfCode": "def generate_article(query: str):\n    \"\"\"\n    Usa la query per cercare un articolo, ne effettua lo scraping del primo risultato\n    e poi invia il contenuto a OpenAI per generare un nuovo articolo.\n    \"\"\"\n    # 1. Faccio una ricerca\n    search_results = perform_search(query=query)\n    items = search_results.get(\"items\", [])\n    if not items:\n        raise HTTPException(status_code=404, detail=\"Nessun risultato trovato per la query.\")",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "test_openai",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def test_openai():\n    \"\"\"\n    Test semplice per verificare la connessione con OpenAI.\n    Invia un semplice prompt e riceve una risposta.\n    \"\"\"\n    prompt = \"Dimmi qualcosa di interessante sull'Italia.\"\n    try:\n        response = openai.ChatCompletion.create(\n            model=\"gpt-3.5-turbo\",\n            messages=[",
         "detail": "main",
         "documentation": {}
     },
@@ -100,7 +127,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "GOOGLE_API_KEY = os.getenv(\"GOOGLE_API_KEY\")\nGOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\nOPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")",
+        "peekOfCode": "GOOGLE_API_KEY = os.getenv(\"GOOGLE_API_KEY\")\nGOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\nOPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI with Google CSE and OpenAI!\"}\n@app.get(\"/search\")",
         "detail": "main",
         "documentation": {}
     },
@@ -109,7 +136,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "GOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\nOPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):",
+        "peekOfCode": "GOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\nOPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):",
         "detail": "main",
         "documentation": {}
     },
@@ -118,7 +145,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "OPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"",
+        "peekOfCode": "OPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"",
         "detail": "main",
         "documentation": {}
     },
@@ -127,7 +154,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "openai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    Parametro: query (string)\n    Ritorna: risultati della ricerca in JSON",
+        "peekOfCode": "openai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    Parametro: query (string)\n    Ritorna: risultati della ricerca in JSON",
         "detail": "main",
         "documentation": {}
     }
