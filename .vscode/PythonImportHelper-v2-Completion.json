@@ -9,12 +9,12 @@
         "documentation": {}
     },
     {
-        "label": "requests",
+        "label": "openai",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "requests",
-        "description": "requests",
-        "detail": "requests",
+        "importPath": "openai",
+        "description": "openai",
+        "detail": "openai",
         "documentation": {}
     },
     {
@@ -34,6 +34,47 @@
         "documentation": {}
     },
     {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "CORSMiddleware",
+        "importPath": "fastapi.middleware.cors",
+        "description": "fastapi.middleware.cors",
+        "isExtraImport": true,
+        "detail": "fastapi.middleware.cors",
+        "documentation": {}
+    },
+    {
+        "label": "perform_search",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "scrape_article",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
         "label": "BeautifulSoup",
         "importPath": "bs4",
         "description": "bs4",
@@ -42,93 +83,93 @@
         "documentation": {}
     },
     {
-        "label": "openai",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "openai",
-        "description": "openai",
-        "detail": "openai",
-        "documentation": {}
-    },
-    {
         "label": "read_root",
         "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    Parametro: query (string)\n    Ritorna: risultati della ricerca in JSON\n    \"\"\"\n    url = \"https://www.googleapis.com/customsearch/v1\"",
-        "detail": "main",
+        "importPath": "backend.main",
+        "description": "backend.main",
+        "peekOfCode": "def read_root():\n    return {\"message\": \"Hello World from FastAPI on Render!\"}\n@app.get(\"/search\")\ndef search_endpoint(query: str):\n    data = perform_search(query)\n    return data\n@app.post(\"/generate_article\")\ndef generate_article(query: str):\n    search_results = perform_search(query=query)\n    items = search_results.get(\"items\", [])",
+        "detail": "backend.main",
         "documentation": {}
     },
     {
-        "label": "perform_search",
+        "label": "search_endpoint",
         "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    Parametro: query (string)\n    Ritorna: risultati della ricerca in JSON\n    \"\"\"\n    url = \"https://www.googleapis.com/customsearch/v1\"\n    params = {\n        \"key\": GOOGLE_API_KEY,\n        \"cx\": GOOGLE_CSE_ID,",
-        "detail": "main",
-        "documentation": {}
-    },
-    {
-        "label": "scrape_article",
-        "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def scrape_article(url: str) -> str:\n    \"\"\"\n    Effettua lo scraping del contenuto testuale di un articolo da un URL.\n    Ritorna il testo estratto come stringa.\n    \"\"\"\n    try:\n        r = requests.get(url, timeout=10)\n        r.raise_for_status()\n    except requests.RequestException as e:\n        print(e)",
-        "detail": "main",
+        "importPath": "backend.main",
+        "description": "backend.main",
+        "peekOfCode": "def search_endpoint(query: str):\n    data = perform_search(query)\n    return data\n@app.post(\"/generate_article\")\ndef generate_article(query: str):\n    search_results = perform_search(query=query)\n    items = search_results.get(\"items\", [])\n    if not items:\n        raise HTTPException(status_code=404, detail=\"Nessun risultato trovato per la query.\")\n    first_url = items[0].get(\"link\")",
+        "detail": "backend.main",
         "documentation": {}
     },
     {
         "label": "generate_article",
         "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def generate_article(query: str):\n    \"\"\"\n    Usa la query per cercare un articolo, ne effettua lo scraping del primo risultato\n    e poi invia il contenuto a OpenAI per generare un nuovo articolo.\n    \"\"\"\n    # 1. Faccio una ricerca\n    search_results = perform_search(query=query)\n    items = search_results.get(\"items\", [])\n    if not items:\n        raise HTTPException(status_code=404, detail=\"Nessun risultato trovato per la query.\")",
-        "detail": "main",
+        "importPath": "backend.main",
+        "description": "backend.main",
+        "peekOfCode": "def generate_article(query: str):\n    search_results = perform_search(query=query)\n    items = search_results.get(\"items\", [])\n    if not items:\n        raise HTTPException(status_code=404, detail=\"Nessun risultato trovato per la query.\")\n    first_url = items[0].get(\"link\")\n    if not first_url:\n        raise HTTPException(status_code=404, detail=\"Nessun URL valido trovato.\")\n    original_text = scrape_article(first_url)\n    if not original_text:",
+        "detail": "backend.main",
         "documentation": {}
     },
     {
         "label": "app",
         "kind": 5,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "app = FastAPI()\n# Leggiamo le variabili d'ambiente\nGOOGLE_API_KEY = os.getenv(\"GOOGLE_API_KEY\")\nGOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\nOPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():",
-        "detail": "main",
-        "documentation": {}
-    },
-    {
-        "label": "GOOGLE_API_KEY",
-        "kind": 5,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "GOOGLE_API_KEY = os.getenv(\"GOOGLE_API_KEY\")\nGOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\nOPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")",
-        "detail": "main",
-        "documentation": {}
-    },
-    {
-        "label": "GOOGLE_CSE_ID",
-        "kind": 5,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "GOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\nOPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):",
-        "detail": "main",
+        "importPath": "backend.main",
+        "description": "backend.main",
+        "peekOfCode": "app = FastAPI()\nOPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not OPENAI_API_KEY:\n    raise RuntimeError(\"OPENAI_API_KEY non impostata.\")\nopenai.api_key = OPENAI_API_KEY\n# Configurazione CORS per consentire richieste dal frontend ospitato su altro dominio\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],  # Puoi limitare al dominio del tuo frontend se vuoi\n    allow_credentials=True,",
+        "detail": "backend.main",
         "documentation": {}
     },
     {
         "label": "OPENAI_API_KEY",
         "kind": 5,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "OPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not GOOGLE_API_KEY or not GOOGLE_CSE_ID or not OPENAI_API_KEY:\n    raise RuntimeError(\"Mancano le variabili d'ambiente: GOOGLE_API_KEY, GOOGLE_CSE_ID o OPENAI_API_KEY non impostate.\")\nopenai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"",
-        "detail": "main",
+        "importPath": "backend.main",
+        "description": "backend.main",
+        "peekOfCode": "OPENAI_API_KEY = os.getenv(\"OPENAI_API_KEY\")\nif not OPENAI_API_KEY:\n    raise RuntimeError(\"OPENAI_API_KEY non impostata.\")\nopenai.api_key = OPENAI_API_KEY\n# Configurazione CORS per consentire richieste dal frontend ospitato su altro dominio\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],  # Puoi limitare al dominio del tuo frontend se vuoi\n    allow_credentials=True,\n    allow_methods=[\"*\"],",
+        "detail": "backend.main",
         "documentation": {}
     },
     {
         "label": "openai.api_key",
         "kind": 5,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "openai.api_key = OPENAI_API_KEY\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello World from FastAPI on Render with Google CSE and OpenAI!\"}\n@app.get(\"/search\")\ndef perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    Parametro: query (string)\n    Ritorna: risultati della ricerca in JSON",
-        "detail": "main",
+        "importPath": "backend.main",
+        "description": "backend.main",
+        "peekOfCode": "openai.api_key = OPENAI_API_KEY\n# Configurazione CORS per consentire richieste dal frontend ospitato su altro dominio\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],  # Puoi limitare al dominio del tuo frontend se vuoi\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n@app.get(\"/\")",
+        "detail": "backend.main",
+        "documentation": {}
+    },
+    {
+        "label": "perform_search",
+        "kind": 2,
+        "importPath": "backend.utils",
+        "description": "backend.utils",
+        "peekOfCode": "def perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    \"\"\"\n    if not GOOGLE_API_KEY or not GOOGLE_CSE_ID:\n        raise RuntimeError(\"GOOGLE_API_KEY o GOOGLE_CSE_ID non impostate.\")\n    url = \"https://www.googleapis.com/customsearch/v1\"\n    params = {\n        \"key\": GOOGLE_API_KEY,\n        \"cx\": GOOGLE_CSE_ID,",
+        "detail": "backend.utils",
+        "documentation": {}
+    },
+    {
+        "label": "scrape_article",
+        "kind": 2,
+        "importPath": "backend.utils",
+        "description": "backend.utils",
+        "peekOfCode": "def scrape_article(url: str) -> str:\n    \"\"\"\n    Effettua lo scraping del contenuto testuale di un articolo da un URL.\n    \"\"\"\n    try:\n        r = requests.get(url, timeout=10)\n        r.raise_for_status()\n    except requests.RequestException as e:\n        print(e)\n        return \"\"",
+        "detail": "backend.utils",
+        "documentation": {}
+    },
+    {
+        "label": "GOOGLE_API_KEY",
+        "kind": 5,
+        "importPath": "backend.utils",
+        "description": "backend.utils",
+        "peekOfCode": "GOOGLE_API_KEY = os.getenv(\"GOOGLE_API_KEY\")\nGOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\ndef perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    \"\"\"\n    if not GOOGLE_API_KEY or not GOOGLE_CSE_ID:\n        raise RuntimeError(\"GOOGLE_API_KEY o GOOGLE_CSE_ID non impostate.\")\n    url = \"https://www.googleapis.com/customsearch/v1\"\n    params = {",
+        "detail": "backend.utils",
+        "documentation": {}
+    },
+    {
+        "label": "GOOGLE_CSE_ID",
+        "kind": 5,
+        "importPath": "backend.utils",
+        "description": "backend.utils",
+        "peekOfCode": "GOOGLE_CSE_ID = os.getenv(\"GOOGLE_CSE_ID\")\ndef perform_search(query: str):\n    \"\"\"\n    Effettua una ricerca su Google Custom Search API.\n    \"\"\"\n    if not GOOGLE_API_KEY or not GOOGLE_CSE_ID:\n        raise RuntimeError(\"GOOGLE_API_KEY o GOOGLE_CSE_ID non impostate.\")\n    url = \"https://www.googleapis.com/customsearch/v1\"\n    params = {\n        \"key\": GOOGLE_API_KEY,",
+        "detail": "backend.utils",
         "documentation": {}
     }
 ]
