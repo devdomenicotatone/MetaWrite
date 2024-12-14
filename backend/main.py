@@ -169,3 +169,4 @@ def generate_article(payload: GenerateArticleRequest):
     return {
         "articolo_generato": generated_article
     }
+
