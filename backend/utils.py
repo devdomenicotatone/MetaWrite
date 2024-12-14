@@ -103,4 +103,3 @@ def scrape_article(url: str) -> str:
         return ""
 
     return cleaned_text
-
