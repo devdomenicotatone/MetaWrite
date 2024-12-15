@@ -6,7 +6,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const backendUrl = "https://metawrite.onrender.com"; // Endpoint del tuo backend
+  const backendUrl = "https://metawrite.onrender.com";
 
   const handleGenerateArticle = async () => {
     setLoading(true);
