@@ -226,7 +226,7 @@
         "kind": 5,
         "importPath": "backend.main",
         "description": "backend.main",
-        "peekOfCode": "openai.api_key = OPENAI_API_KEY\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],  # In produzione limitare gli origin\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\nclass GenerateArticleRequest(BaseModel):\n    query: str",
+        "peekOfCode": "openai.api_key = OPENAI_API_KEY\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\nclass GenerateArticleRequest(BaseModel):\n    query: str",
         "detail": "backend.main",
         "documentation": {}
     },

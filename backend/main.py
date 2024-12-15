@@ -32,7 +32,7 @@ openai.api_key = OPENAI_API_KEY
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In produzione limitare gli origin
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -106,8 +106,7 @@ def generate_article(payload: GenerateArticleRequest):
         logger.warning("No results found for the query")
         raise HTTPException(status_code=404, detail="Nessun risultato trovato per la query.")
 
-    # Usa solo i primi 3 risultati per prevenire contesto troppo lungo
-    top_items = items[:3]
+    top_items = items[:5]
     logger.info(f"Processing top {len(top_items)} results")
 
     summaries = []
@@ -152,7 +151,7 @@ def generate_article(payload: GenerateArticleRequest):
     try:
         logger.info("Sending request to OpenAI for article generation with summarized content")
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # Usa gpt-4 se disponibile
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "Sei un assistente che crea contenuti informativi e ben strutturati."},
                 {"role": "user", "content": prompt_message}
